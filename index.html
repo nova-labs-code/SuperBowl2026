@@ -17,7 +17,7 @@
     background: #ff8c42;
     color: #fff;
     text-align: center;
-    padding: 1.6rem 1rem;
+    padding: 1.5rem 1rem;
   }
 
   header h1 {
@@ -38,6 +38,7 @@
     padding: 1.5rem;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     text-align: center;
+    margin-bottom: 1.5rem;
   }
 
   .matchup {
@@ -58,6 +59,9 @@
     border-radius: 14px;
     padding: 1rem;
     box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .team img {
@@ -66,33 +70,48 @@
     object-fit: contain;
   }
 
+  .team-info {
+    flex: 1;
+    padding-left: 0.8rem;
+    text-align: left;
+  }
+
   .team-name {
     font-weight: 700;
-    margin-top: 0.4rem;
     color: #ff6f3c;
   }
 
   .score {
     font-size: 3rem;
     font-weight: 800;
+    min-width: 50px;
+    text-align: right;
   }
 
-  /* Pulse animation */
+  .score.pulse {
+    animation: scorePulse 0.6s ease-out;
+  }
+
   @keyframes scorePulse {
     0% { transform: scale(1); }
     40% { transform: scale(1.25); color: #ff6f3c; }
     100% { transform: scale(1); }
   }
 
-  .pulse {
-    animation: scorePulse 0.6s ease-out;
-  }
-
-  /* Quarter / clock */
+  /* Quarter / Clock / Possession */
   #game-meta {
     margin-top: 0.8rem;
     font-weight: 600;
     color: #ff8c42;
+  }
+
+  .possession-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #2ecc71;
+    border-radius: 50%;
+    margin-left: 0.5rem;
   }
 
   /* Status badge */
@@ -109,17 +128,52 @@
   .status-live { background: #2ecc71; color: #fff; }
   .status-final { background: #34495e; color: #fff; }
 
+  /* Quarter-by-quarter table */
+  .quarter-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  .quarter-table th, .quarter-table td {
+    padding: 0.4rem 0.6rem;
+    text-align: center;
+    border: 1px solid #ffddd0;
+  }
+
+  .quarter-table th {
+    background: #ff6f3c;
+    color: #fff;
+  }
+
+  /* Last scoring play ticker */
+  #last-play {
+    background: #ffe5d6;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+
+  /* Player stats panel */
+  .stats-panel {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fff3e6;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+
+  .stats-panel h4 {
+    margin-top: 0;
+    color: #ff6f3c;
+    font-size: 1.1rem;
+  }
+
   /* Mobile */
   @media (max-width: 600px) {
     .teams {
       flex-direction: column;
-    }
-
-    .team {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-align: left;
     }
 
     .team img {
@@ -135,43 +189,76 @@
 </head>
 
 <body>
-
 <header>
   <h1>Super Bowl LX – 2026</h1>
 </header>
 
 <main>
-
   <section class="scoreboard">
     <div class="matchup">Seattle Seahawks vs New England Patriots</div>
 
     <div class="teams">
-      <div class="team">
+      <div class="team" id="home-team">
         <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg" alt="Seahawks">
-        <div>
-          <div class="team-name">Seattle Seahawks</div>
+        <div class="team-info">
+          <div class="team-name">Seattle Seahawks <span id="home-possession" class="possession-dot" style="display:none"></span></div>
           <div class="score" id="score-home">—</div>
         </div>
       </div>
 
-      <div class="team">
+      <div class="team" id="away-team">
         <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg" alt="Patriots">
-        <div>
-          <div class="team-name">New England Patriots</div>
+        <div class="team-info">
+          <div class="team-name">New England Patriots <span id="away-possession" class="possession-dot" style="display:none"></span></div>
           <div class="score" id="score-away">—</div>
         </div>
       </div>
     </div>
 
     <div id="game-meta">
-      <span id="quarter">—</span>
-      <span>•</span>
-      <span id="clock">—</span>
+      <span id="quarter">—</span> • <span id="clock">—</span>
     </div>
 
     <div id="status"></div>
-  </section>
 
+    <table class="quarter-table" id="quarter-table">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Q1</th>
+          <th>Q2</th>
+          <th>Q3</th>
+          <th>Q4</th>
+          <th>OT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Seahawks</td>
+          <td id="home-q1">—</td>
+          <td id="home-q2">—</td>
+          <td id="home-q3">—</td>
+          <td id="home-q4">—</td>
+          <td id="home-ot">—</td>
+        </tr>
+        <tr>
+          <td>Patriots</td>
+          <td id="away-q1">—</td>
+          <td id="away-q2">—</td>
+          <td id="away-q3">—</td>
+          <td id="away-q4">—</td>
+          <td id="away-ot">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div id="last-play">Last scoring play: —</div>
+
+    <div class="stats-panel" id="stats-panel">
+      <h4>Team Stats</h4>
+      <div id="team-stats">Loading...</div>
+    </div>
+  </section>
 </main>
 
 <script>
@@ -184,6 +271,9 @@ const awayScoreEl = document.getElementById("score-away");
 const quarterEl = document.getElementById("quarter");
 const clockEl = document.getElementById("clock");
 const statusEl = document.getElementById("status");
+
+const homePoss = document.getElementById("home-possession");
+const awayPoss = document.getElementById("away-possession");
 
 let lastHome = null;
 let lastAway = null;
@@ -214,25 +304,30 @@ async function loadGame() {
     const game = data.events.find(e =>
       e.name.includes(HOME_TEAM) && e.name.includes(AWAY_TEAM)
     );
-
     if (!game) return;
 
     const comp = game.competitions[0];
     const home = comp.competitors.find(t => t.homeAway === "home");
     const away = comp.competitors.find(t => t.homeAway === "away");
 
+    // Scores + pulse
     if (lastHome !== null && home.score !== lastHome) pulse(homeScoreEl);
     if (lastAway !== null && away.score !== lastAway) pulse(awayScoreEl);
 
     homeScoreEl.textContent = home.score;
     awayScoreEl.textContent = away.score;
-
     lastHome = home.score;
     lastAway = away.score;
 
+    // Quarter / clock
     quarterEl.textContent = formatQuarter(comp.status);
     clockEl.textContent = comp.status.displayClock || "—";
 
+    // Possession
+    homePoss.style.display = home.hasPossession ? "inline-block" : "none";
+    awayPoss.style.display = away.hasPossession ? "inline-block" : "none";
+
+    // Status
     if (comp.status.type.completed) {
       setStatus("final", "FINAL");
     } else if (comp.status.type.state === "pre") {
@@ -241,15 +336,41 @@ async function loadGame() {
       setStatus("live", "LIVE");
     }
 
-  } catch {
+    // Quarter-by-quarter
+    ["1","2","3","4","OT"].forEach((q,i) => {
+      document.getElementById(`home-q${i+1}`).textContent = home.linescores[i]?.score || "—";
+      document.getElementById(`away-q${i+1}`).textContent = away.linescores[i]?.score || "—";
+    });
+
+    // Last scoring play
+    const lastScore = comp.scoringPlays?.slice(-1)[0];
+    if (lastScore) {
+      document.getElementById("last-play").textContent =
+        `Last scoring play: ${lastScore.team.abbreviation} ${lastScore.text}`;
+    } else {
+      document.getElementById("last-play").textContent = "Last scoring play: —";
+    }
+
+    // Team stats panel
+    const statsDiv = document.getElementById("team-stats");
+    statsDiv.innerHTML = `
+      <p>${home.team.displayName}: ${home.statistics?.map(s=>`${s.name}: ${s.value}`).join(", ") || "N/A"}</p>
+      <p>${away.team.displayName}: ${away.statistics?.map(s=>`${s.name}: ${s.value}`).join(", ") || "N/A"}</p>
+    `;
+
+  } catch (err) {
+    console.warn("API unavailable", err);
     setStatus("upcoming", "CHECK BACK SOON");
     quarterEl.textContent = "—";
     clockEl.textContent = "—";
+    homeScoreEl.textContent = awayScoreEl.textContent = "—";
+    document.getElementById("last-play").textContent = "Last scoring play: —";
+    document.getElementById("team-stats").textContent = "Loading...";
   }
 }
 
 loadGame();
-setInterval(loadGame, 10000);
+setInterval(loadGame, 15000);
 </script>
 
 </body>
