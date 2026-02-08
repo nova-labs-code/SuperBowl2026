@@ -142,27 +142,30 @@ function formatQuarter(status){
   return `Q${status.period}`;
 }
 
-// Countdown, but switch to LIVE 1 hour before kickoff
+// Countdown that runs continuously until kickoff
 function fallbackCountdown(){
   const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
   const now = Date.now();
   const diff = kickoff - now;
 
-  if(diff>3600000){ // more than 1 hour to kickoff
-    const h = Math.floor(diff/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    const s = Math.floor((diff%60000)/1000);
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  if(diff>0){
     clockEl.textContent = `${h}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")} until kickoff`;
+  } else {
+    clockEl.textContent = "00:00:00 — Kickoff!";
+  }
+
+  // Switch to LIVE 1 hour before kickoff
+  if(diff<=3600000) {
+    setStatus("live","LIVE");
+    if(homeScoreEl.textContent==="—") homeScoreEl.textContent="0";
+    if(awayScoreEl.textContent==="—") awayScoreEl.textContent="0";
+    if(quarterEl.textContent==="—") quarterEl.textContent="Q1";
+  } else {
     setStatus("upcoming","UPCOMING");
-    quarterEl.textContent="—";
-    homeScoreEl.textContent="—";
-    awayScoreEl.textContent="—";
-  } else { 
-    clockEl.textContent="Starting soon";
-    setStatus("live","LIVE"); // switch to live even if API is not populated
-    quarterEl.textContent="Q1";
-    homeScoreEl.textContent="0";
-    awayScoreEl.textContent="0";
+    if(quarterEl.textContent==="—") quarterEl.textContent="—";
   }
 }
 
@@ -220,11 +223,10 @@ async function loadGame(){
   }
 }
 
-// Countdown every second
+// Update countdown every second
 setInterval(fallbackCountdown,1000);
 loadGame();
 setInterval(loadGame,15000);
-
 </script>
 </body>
 </html>
