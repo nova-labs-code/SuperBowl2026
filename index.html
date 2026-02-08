@@ -147,14 +147,13 @@ function formatQuarter(status){
   return `Q${status.period}`;
 }
 
+// Countdown independent of API
 const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
-
 function updateCountdown() {
   const now = Date.now();
   const diff = kickoff - now;
 
   if(diff > 0){
-    // Game not started yet — countdown runs
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
@@ -162,23 +161,20 @@ function updateCountdown() {
     quarterEl.textContent = "—";
     setStatus("upcoming","UPCOMING");
 
-    // Last 5 minutes red warning
-    if(diff <= 5*60*1000){
-      clockEl.classList.add("warning");
-    } else {
-      clockEl.classList.remove("warning");
-    }
+    if(diff <= 5*60*1000) clockEl.classList.add("warning");
+    else clockEl.classList.remove("warning");
+
     liveStarted = false;
 
   } else {
-    // Countdown reached zero — still show 00:00 until API says LIVE
+    // After countdown, show 00:00 until API reports LIVE
     clockEl.textContent = "00:00 until kickoff";
-    quarterEl.textContent = "—";
     clockEl.classList.remove("warning");
     if(!liveStarted) setStatus("upcoming","UPCOMING");
   }
 }
 
+// Load live API only sets LIVE if game started
 async function loadGame(){
   try{
     const res = await fetch(API);
@@ -189,10 +185,7 @@ async function loadGame(){
       e.competitions?.[0]?.competitors?.some(t=>t.team.displayName===AWAY_TEAM)
     );
 
-    if(!game){
-      updateCountdown();
-      return;
-    }
+    if(!game) return;
 
     const comp = game.competitions[0];
     const home = comp.competitors.find(t=>t.homeAway==="home");
@@ -207,15 +200,16 @@ async function loadGame(){
     lastAway=away.score;
 
     quarterEl.textContent=formatQuarter(comp.status);
-    clockEl.textContent = comp.status.displayClock || clockEl.textContent;
+    if(comp.status.displayClock) clockEl.textContent = comp.status.displayClock;
 
     homePoss.style.display=home.hasPossession?"inline-block":"none";
     awayPoss.style.display=away.hasPossession?"inline-block":"none";
 
-    if(comp.status?.type?.state === "in") {
-  liveStarted = true;
-  setStatus("live","LIVE");
-}
+    if(comp.status.type.state==="in") {
+      liveStarted = true;
+      setStatus("live","LIVE");
+    }
+    if(comp.status.type.completed) setStatus("final","FINAL");
 
     ["1","2","3","4","OT"].forEach((q,i)=>{
       document.getElementById(`home-q${i+1}`).textContent=home.linescores?.[i]?.score||"—";
@@ -230,10 +224,12 @@ async function loadGame(){
     <p>${away.team.displayName}: ${away.statistics?.map(s=>`${s.name}: ${s.value}`).join(", ")||"N/A"}</p>`;
 
   } catch{
-    updateCountdown();
+    // ignore, countdown still runs
   }
 }
 
+// Run countdown and API updates
+updateCountdown();
 setInterval(updateCountdown,1000);
 loadGame();
 setInterval(loadGame,15000);
