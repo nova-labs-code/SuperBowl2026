@@ -30,6 +30,8 @@
   .card { background: #f1f3f5; border-radius: 8px; padding: 1rem; text-align: center; width: 120px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
   .card img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-bottom: 0.5rem; }
 
+  #scoreboard p { font-size: 1.5rem; font-weight: bold; text-align: center; margin-top: 1rem; }
+
   ul { list-style: none; padding: 0; }
   li { background: #f1f3f5; padding: 0.8rem 1rem; margin-bottom: 0.5rem; border-radius: 5px; }
 
@@ -59,13 +61,19 @@
     </div>
   </div>
 
-  <!-- Game Info -->
+  <!-- Countdown -->
   <section class="info">
     <h3>Game Information</h3>
     <p><strong>Date & Kickoff:</strong> Sunday, February 8, 2026 | 6:30 PM ET / 3:30 PM PT</p>
     <p><strong>Location:</strong> Levi’s Stadium, Santa Clara, California</p>
     <p><strong>TV & Streaming:</strong> NBC | Peacock | Telemundo | Universo</p>
     <div id="countdown"></div>
+  </section>
+
+  <!-- Scoreboard -->
+  <section id="scoreboard">
+    <h3>Scoreboard</h3>
+    <p id="score-text">Loading score...</p>
   </section>
 
   <!-- Seahawks Roster -->
@@ -108,7 +116,7 @@
 
 <script>
   // Countdown timer
-  const kickoff = new Date("Feb 8, 2026 18:30:00").getTime();
+  const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
   const countdownEl = document.getElementById("countdown");
   setInterval(() => {
     const now = new Date().getTime();
@@ -124,7 +132,7 @@
     countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
   }, 1000);
 
-  // Create coach/player card
+  // Create card for coach/player
   function createCard(person, isCoach=false) {
     const div = document.createElement('div');
     div.className = 'card';
@@ -136,7 +144,7 @@
     return div;
   }
 
-  // Load roster from JSON
+  // Load roster JSON
   async function loadTeamRoster(jsonPath, coachesContainerId, playersContainerId) {
     try {
       const res = await fetch(jsonPath);
@@ -151,15 +159,36 @@
       data.players.forEach(player => {
         playersContainer.appendChild(createCard(player));
       });
-
     } catch (err) {
       console.error('Error loading roster:', err);
     }
   }
 
-  // Load both teams
   loadTeamRoster('seahawks.json', 'seahawks-coaches', 'seahawks-players');
   loadTeamRoster('patriots.json', 'patriots-coaches', 'patriots-players');
+
+  // Load score JSON
+  const scoreText = document.getElementById("score-text");
+
+  async function loadScore() {
+    try {
+      const now = new Date().getTime();
+      if (now < kickoff) {
+        scoreText.textContent = "Game has not started yet";
+        return;
+      }
+
+      const res = await fetch('score.json');
+      const data = await res.json();
+      scoreText.textContent = `${data.homeTeam} ${data.homeScore} - ${data.awayTeam} ${data.awayScore}`;
+    } catch (err) {
+      console.error('Error loading score:', err);
+      scoreText.textContent = "Unable to load score";
+    }
+  }
+
+  loadScore();
+  setInterval(loadScore, 30000); // refresh every 30 seconds
 </script>
 
 </body>
