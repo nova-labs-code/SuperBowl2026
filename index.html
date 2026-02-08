@@ -149,35 +149,33 @@ function formatQuarter(status){
 
 const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
 
-function updateCountdown(){
+function updateCountdown() {
   const now = Date.now();
   const diff = kickoff - now;
 
-  if(diff > 0 && !liveStarted){
+  if(diff > 0){
+    // Game not started yet — countdown runs
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     clockEl.textContent = `${h}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")} until kickoff`;
     quarterEl.textContent = "—";
-    setStatus("upcoming", "UPCOMING");
+    setStatus("upcoming","UPCOMING");
 
-    // Red warning in last 5 minutes
+    // Last 5 minutes red warning
     if(diff <= 5*60*1000){
       clockEl.classList.add("warning");
     } else {
       clockEl.classList.remove("warning");
     }
+    liveStarted = false;
 
-  } else if(!liveStarted){
-    liveStarted = true;
-    clockEl.classList.add("hidden");
-    setTimeout(()=>{
-      clockEl.textContent = "00:00 — Kickoff!";
-      clockEl.classList.remove("hidden");
-      quarterEl.textContent = "Q1";
-      setStatus("live","LIVE");
-      clockEl.classList.remove("warning");
-    },800);
+  } else {
+    // Countdown reached zero — still show 00:00 until API says LIVE
+    clockEl.textContent = "00:00 until kickoff";
+    quarterEl.textContent = "—";
+    clockEl.classList.remove("warning");
+    if(!liveStarted) setStatus("upcoming","UPCOMING");
   }
 }
 
@@ -214,8 +212,10 @@ async function loadGame(){
     homePoss.style.display=home.hasPossession?"inline-block":"none";
     awayPoss.style.display=away.hasPossession?"inline-block":"none";
 
-    if(comp.status.type.completed) setStatus("final","FINAL");
-    else setStatus("live","LIVE");
+    if(comp.status?.type?.state === "in") {
+  liveStarted = true;
+  setStatus("live","LIVE");
+}
 
     ["1","2","3","4","OT"].forEach((q,i)=>{
       document.getElementById(`home-q${i+1}`).textContent=home.linescores?.[i]?.score||"—";
