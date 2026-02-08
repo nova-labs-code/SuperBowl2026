@@ -76,17 +76,6 @@ main { max-width:900px; margin:auto; padding:1rem; }
   text-align:right;
 }
 
-.score.pulse {
-  animation: scorePulse 0.6s ease-out;
-}
-
-@keyframes scorePulse {
-  0% { transform:scale(1); }
-  40% { transform:scale(1.25); color:#ff6f3c; }
-  100% { transform:scale(1); }
-}
-
-/* POSSESSION DOT */
 .possession-dot {
   display:inline-block;
   width:10px;
@@ -96,7 +85,6 @@ main { max-width:900px; margin:auto; padding:1rem; }
   margin-left:0.5rem;
 }
 
-/* LIVE POSSESSION PULSE */
 .possession-dot.live {
   animation: possessionPulse 1.2s infinite;
 }
@@ -116,7 +104,7 @@ main { max-width:900px; margin:auto; padding:1rem; }
 
 .status-badge {
   display:inline-block;
-  margin-top:0.8rem;
+  margin-top:0.6rem;
   padding:0.35rem 0.8rem;
   border-radius:999px;
   font-size:0.85rem;
@@ -127,12 +115,25 @@ main { max-width:900px; margin:auto; padding:1rem; }
 .status-live { background:#2ecc71; color:#fff; }
 .status-final { background:#34495e; color:#fff; }
 
-.fade { transition: opacity 0.6s ease; opacity:1; }
+.warmup {
+  margin-top:0.35rem;
+  font-size:0.8rem;
+  font-weight:600;
+  color:#ff8c42;
+  opacity:0.85;
+  transition:opacity 0.4s ease;
+}
+
+.warmup.hidden {
+  opacity:0;
+  pointer-events:none;
+}
+
+.fade { transition:opacity 0.6s ease; opacity:1; }
 .clock-fade-out { opacity:0; }
 
 #clock.warning { color:#e74c3c; }
 
-/* HIDDEN UNTIL KICKOFF */
 #quarter-table { display:none; }
 
 .quarter-table {
@@ -161,14 +162,6 @@ main { max-width:900px; margin:auto; padding:1rem; }
   font-weight:600;
 }
 
-.stats-panel {
-  margin-top:1rem;
-  padding:1rem;
-  background:#fff3e6;
-  border-radius:12px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
 @media (max-width:600px) {
   .teams { flex-direction:column; }
   .team img { width:70px; height:70px; }
@@ -193,7 +186,7 @@ main { max-width:900px; margin:auto; padding:1rem; }
     <div class="team-info">
       <div class="team-name">
         Seattle Seahawks
-        <span id="home-possession" class="possession-dot"></span>
+        <span id="home-possession" class="possession-dot" style="display:none"></span>
       </div>
       <div class="score" id="score-home">—</div>
     </div>
@@ -204,7 +197,7 @@ main { max-width:900px; margin:auto; padding:1rem; }
     <div class="team-info">
       <div class="team-name">
         New England Patriots
-        <span id="away-possession" class="possession-dot"></span>
+        <span id="away-possession" class="possession-dot" style="display:none"></span>
       </div>
       <div class="score" id="score-away">—</div>
     </div>
@@ -219,6 +212,10 @@ main { max-width:900px; margin:auto; padding:1rem; }
   <span class="status-badge status-upcoming">UPCOMING</span>
 </div>
 
+<div id="warmup-indicator" class="warmup hidden">
+  Data warming up…
+</div>
+
 <table class="quarter-table" id="quarter-table">
 <thead>
 <tr>
@@ -226,8 +223,22 @@ main { max-width:900px; margin:auto; padding:1rem; }
 </tr>
 </thead>
 <tbody>
-<tr><td>Seahawks</td><td id="home-q1">—</td><td id="home-q2">—</td><td id="home-q3">—</td><td id="home-q4">—</td><td id="home-ot">—</td></tr>
-<tr><td>Patriots</td><td id="away-q1">—</td><td id="away-q2">—</td><td id="away-q3">—</td><td id="away-q4">—</td><td id="away-ot">—</td></tr>
+<tr>
+  <td>Seahawks</td>
+  <td id="home-q1">—</td>
+  <td id="home-q2">—</td>
+  <td id="home-q3">—</td>
+  <td id="home-q4">—</td>
+  <td id="home-ot">—</td>
+</tr>
+<tr>
+  <td>Patriots</td>
+  <td id="away-q1">—</td>
+  <td id="away-q2">—</td>
+  <td id="away-q3">—</td>
+  <td id="away-q4">—</td>
+  <td id="away-ot">—</td>
+</tr>
 </tbody>
 </table>
 
@@ -244,6 +255,7 @@ const AWAY = "New England Patriots";
 const clockEl = document.getElementById("clock");
 const quarterEl = document.getElementById("quarter");
 const statusEl = document.getElementById("status");
+const warmupEl = document.getElementById("warmup-indicator");
 
 const homeScoreEl = document.getElementById("score-home");
 const awayScoreEl = document.getElementById("score-away");
@@ -268,7 +280,10 @@ function updateCountdown(){
     const h = Math.floor(diff/3600000);
     const m = Math.floor(diff%3600000/60000);
     const s = Math.floor(diff%60000/1000);
-    clockEl.textContent = `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
+
+    clockEl.textContent =
+      `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
+
     quarterEl.textContent = "—";
     setStatus("upcoming","UPCOMING");
   } else {
@@ -306,13 +321,23 @@ async function loadGame(){
     homePoss.classList.toggle("live", gameIsLive && home.hasPossession);
     awayPoss.classList.toggle("live", gameIsLive && away.hasPossession);
 
+    const minutesToKickoff = (kickoff - Date.now()) / 60000;
+    const isWarmup =
+      comp.status.type.state === "pre" &&
+      minutesToKickoff <= 120 &&
+      minutesToKickoff > 0 &&
+      !gameIsLive;
+
+    warmupEl.classList.toggle("hidden", !isWarmup);
+
     if(comp.status.type.state === "in" && !gameIsLive){
       gameIsLive = true;
+      warmupEl.classList.add("hidden");
       document.getElementById("quarter-table").style.display = "table";
 
       clockEl.classList.add("clock-fade-out");
       setTimeout(()=>{
-        clockEl.textContent = comp.status.displayClock;
+        clockEl.textContent = comp.status.displayClock || "—";
         clockEl.classList.remove("clock-fade-out");
       },400);
 
