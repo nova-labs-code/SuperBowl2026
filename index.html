@@ -2,82 +2,77 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/a/ac/NFL_logo.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Super Bowl LX 2026 – Coaches & Score</title>
+<title>Super Bowl LX 2026 – Scoreboard</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #f8f9fa; color: #1c1e21; line-height: 1.6; }
-  h1, h2, h3 { font-weight: 600; }
-  h1 { font-size: 2.5rem; }
-  h3 { margin-bottom: 0.5rem; color: #333; }
-
-  header { background: #004B8D; color: #fff; text-align: center; padding: 2rem 1rem; }
-  main { max-width: 1200px; margin: auto; padding: 2rem; }
-
-  section { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-
-  /* Professional Scoreboard */
-  #scoreboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    background: #004B8D;
-    color: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-
-  .team-score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 140px;
-  }
-
-  .team-score img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    margin-bottom: 0.5rem;
-  }
-
-  .team-name {
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 0.3rem;
-    font-size: 1rem;
-  }
-
-  .score {
-    font-size: 2rem;
-    font-weight: bold;
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #f8f9fa;
+    color: #1c1e21;
+    line-height: 1.6;
     margin: 0;
   }
 
-  .versus {
-    font-size: 1.5rem;
+  header {
+    background: #004B8D;
+    color: #fff;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  header h1 { margin-bottom: 0.5rem; }
+
+  main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+  }
+
+  /* Scoreboard */
+  .scoreboard {
+    background: #004B8D;
+    color: #fff;
+    border-radius: 10px;
+    padding: 2rem 3rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .matchup { font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem; }
+  .teams {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .scores {
+    display: flex;
+    justify-content: space-between;
+    font-size: 2.5rem;
     font-weight: bold;
   }
+  #status { margin-top: 1rem; font-size: 1rem; color: #ffdd57; }
 
-  #score-text {
-    text-align: center;
-    margin-top: 0.5rem;
-    font-size: 1.2rem;
-    color: #000;
+  /* Sections */
+  section {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
   }
 
-  /* Coaches */
-  .coaches { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; justify-content: center; }
-  .card { background: #f1f3f5; border-radius: 8px; padding: 1rem; text-align: center; width: 150px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-  .card img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: 0.5rem; }
+  h3 { margin-bottom: 1rem; }
 
-  @media(max-width: 768px) {
-    .coaches { flex-direction: column; align-items: center; }
-    #scoreboard-container { flex-direction: column; gap: 1rem; }
-    .versus { display: none; }
+  ul { list-style: none; padding: 0; }
+  li { background: #f1f3f5; padding: 0.8rem 1rem; margin-bottom: 0.5rem; border-radius: 5px; }
+
+  .halftime p, .predictions p { margin-bottom: 0.5rem; }
+
+  @media(max-width: 500px) {
+    .teams, .scores { flex-direction: column; gap: 0.5rem; }
+    .scores { font-size: 2rem; }
   }
 </style>
 </head>
@@ -90,34 +85,25 @@
 <main>
 
   <!-- Scoreboard -->
-  <section id="scoreboard">
-    <h3>Scoreboard</h3>
-    <div id="scoreboard-container">
-      <div class="team-score" id="home-score">
-        <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg" alt="Seattle Seahawks Logo">
-        <p class="team-name">Seattle Seahawks</p>
-        <p class="score">0</p>
-      </div>
-      <div class="versus">VS</div>
-      <div class="team-score" id="away-score">
-        <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg" alt="New England Patriots Logo">
-        <p class="team-name">New England Patriots</p>
-        <p class="score">0</p>
-      </div>
+  <section class="scoreboard">
+    <div class="matchup">Seattle Seahawks vs New England Patriots</div>
+    <div class="teams">
+      <div id="team-home">Seattle Seahawks</div>
+      <div id="team-away">New England Patriots</div>
     </div>
-    <p id="score-text">Loading score...</p>
+    <div class="scores">
+      <div id="score-home">0</div>
+      <div id="score-away">0</div>
+    </div>
+    <div id="status">Loading score...</div>
   </section>
 
-  <!-- Seahawks Coaches -->
-  <section id="seahawks-coaches-section">
-    <h3>Seattle Seahawks Coaches</h3>
-    <div class="coaches" id="seahawks-coaches"></div>
-  </section>
-
-  <!-- Patriots Coaches -->
-  <section id="patriots-coaches-section">
-    <h3>New England Patriots Coaches</h3>
-    <div class="coaches" id="patriots-coaches"></div>
+  <!-- Game Info -->
+  <section>
+    <h3>Game Information</h3>
+    <p><strong>Date & Kickoff:</strong> Sunday, February 8, 2026 | 6:30 PM ET / 3:30 PM PT</p>
+    <p><strong>Location:</strong> Levi’s Stadium, Santa Clara, California</p>
+    <p><strong>TV & Streaming:</strong> NBC | Peacock | Telemundo | Universo</p>
   </section>
 
   <!-- Predictions -->
@@ -138,6 +124,19 @@
     <p>Experience a high-energy performance from the global Latin superstar!</p>
   </section>
 
+  <!-- Fun Facts -->
+  <section class="trivia">
+    <h3>Fun Facts</h3>
+    <ul>
+      <li>This game is a <strong>rematch of Super Bowl XLIX (2015)</strong>, where the Patriots defeated the Seahawks 28–24 with Malcolm Butler's interception.</li>
+      <li>The Seahawks and Patriots have faced each other <strong>21 times overall</strong> (regular season + playoffs), with Seattle slightly leading the series.</li>
+      <li>Super Bowl LX is the <strong>10th rematch in Super Bowl history</strong>, a rare occurrence in NFL history.</li>
+      <li>The New England Patriots hold the NFL record for the <strong>most Super Bowl appearances</strong> by any franchise.</li>
+      <li>Levi’s Stadium hosted <strong>Super Bowl 50 in 2016</strong> and now Super Bowl LX, making it one of the few stadiums to host multiple Super Bowls.</li>
+      <li>Bad Bunny is the <strong>first solo Spanish-speaking artist</strong> to headline the Super Bowl halftime show.</li>
+    </ul>
+  </section>
+
 </main>
 
 <footer>
@@ -145,70 +144,35 @@
 </footer>
 
 <script>
-  const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
+const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
+const homeScoreEl = document.getElementById("score-home");
+const awayScoreEl = document.getElementById("score-away");
+const statusEl = document.getElementById("status");
 
-  // Coaches data with real images
-  const seahawksCoaches = [
-    { "name": "Mike Macdonald", "role": "Head Coach", "photo": "https://www.seahawks.com/photos/image/17043" },
-    { "name": "Klint Kubiak", "role": "Offensive Coordinator", "photo": "https://www.seahawks.com/photos/image/17044" },
-    { "name": "Aden Durde", "role": "Defensive Coordinator", "photo": "https://www.seahawks.com/photos/image/17045" },
-    { "name": "Jay Harbaugh", "role": "Special Teams Coordinator", "photo": "https://www.seahawks.com/photos/image/17046" }
-  ];
-
-  const patriotsCoaches = [
-    { "name": "Bill Belichick", "role": "Head Coach", "photo": "https://upload.wikimedia.org/wikipedia/commons/8/84/Bill_Belichick_2019.jpg" },
-    { "name": "Joe Judge", "role": "Offensive Coordinator", "photo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Joe_Judge_2020.jpg" },
-    { "name": "Steve Belichick", "role": "Defensive Coordinator", "photo": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Steve_Belichick.jpg" },
-    { "name": "Larry Izzo", "role": "Special Teams Coordinator", "photo": "https://upload.wikimedia.org/wikipedia/commons/9/91/Larry_Izzo.jpg" }
-  ];
-
-  function createCoachCard(coach) {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <img src="${coach.photo}" alt="${coach.name}">
-      <p><strong>${coach.name}</strong></p>
-      <p>${coach.role}</p>
-    `;
-    return div;
+async function loadScore() {
+  const now = new Date().getTime();
+  if (now < kickoff) {
+    statusEl.textContent = "Game has not started yet";
+    homeScoreEl.textContent = "0";
+    awayScoreEl.textContent = "0";
+    return;
   }
 
-  // Load coaches
-  const seahawksContainer = document.getElementById('seahawks-coaches');
-  seahawksCoaches.forEach(c => seahawksContainer.appendChild(createCoachCard(c)));
+  try {
+    const res = await fetch('score.json');
+    const data = await res.json();
 
-  const patriotsContainer = document.getElementById('patriots-coaches');
-  patriotsCoaches.forEach(c => patriotsContainer.appendChild(createCoachCard(c)));
-
-  // Load score dynamically
-  const scoreText = document.getElementById("score-text");
-  const homeScoreEl = document.querySelector("#home-score .score");
-  const awayScoreEl = document.querySelector("#away-score .score");
-
-  async function loadScore() {
-    try {
-      const now = new Date().getTime();
-      if (now < kickoff) {
-        scoreText.textContent = "Game has not started yet";
-        homeScoreEl.textContent = "0";
-        awayScoreEl.textContent = "0";
-        return;
-      }
-
-      const res = await fetch('score.json');
-      const data = await res.json();
-
-      homeScoreEl.textContent = data.homeScore;
-      awayScoreEl.textContent = data.awayScore;
-      scoreText.textContent = `${data.homeTeam} vs ${data.awayTeam}`;
-    } catch (err) {
-      console.error('Error loading score:', err);
-      scoreText.textContent = "Unable to load score";
-    }
+    homeScoreEl.textContent = data.homeScore;
+    awayScoreEl.textContent = data.awayScore;
+    statusEl.textContent = `${data.homeTeam} vs ${data.awayTeam}`;
+  } catch (err) {
+    console.error('Error loading score:', err);
+    statusEl.textContent = "Unable to load score";
   }
+}
 
-  loadScore();
-  setInterval(loadScore, 30000);
+loadScore();
+setInterval(loadScore, 3000);
 </script>
 
 </body>
