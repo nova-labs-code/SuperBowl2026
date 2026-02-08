@@ -33,6 +33,8 @@ main { max-width:900px; margin:auto; padding:1rem; }
 .stats-panel h4 { margin-top:0; color:#ff6f3c; font-size:1.1rem; }
 .fade { transition: opacity 0.8s ease; opacity:1; }
 .fade.hidden { opacity:0; }
+#clock { font-weight:700; transition: color 0.5s ease; }
+#clock.warning { color: #e74c3c; } /* red for last 5 minutes */
 @media (max-width:600px) { .teams{flex-direction:column;} .team img{width:70px;height:70px;} .score{font-size:2.4rem;} }
 </style>
 </head>
@@ -158,8 +160,15 @@ function updateCountdown(){
     clockEl.textContent = `${h}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")} until kickoff`;
     quarterEl.textContent = "—";
     setStatus("upcoming", "UPCOMING");
+
+    // Red warning in last 5 minutes
+    if(diff <= 5*60*1000){
+      clockEl.classList.add("warning");
+    } else {
+      clockEl.classList.remove("warning");
+    }
+
   } else if(!liveStarted){
-    // fade transition
     liveStarted = true;
     clockEl.classList.add("hidden");
     setTimeout(()=>{
@@ -167,6 +176,7 @@ function updateCountdown(){
       clockEl.classList.remove("hidden");
       quarterEl.textContent = "Q1";
       setStatus("live","LIVE");
+      clockEl.classList.remove("warning");
     },800);
   }
 }
