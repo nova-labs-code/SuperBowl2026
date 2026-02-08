@@ -7,10 +7,10 @@
 <style>
   body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: #f8f9fa;
+    background: #f0f2f5;
     color: #1c1e21;
-    line-height: 1.6;
     margin: 0;
+    padding: 0;
   }
 
   header {
@@ -20,46 +20,83 @@
     padding: 2rem 1rem;
   }
 
-  header h1 { margin-bottom: 0.5rem; }
+  header h1 { margin: 0; font-size: 2.5rem; }
 
   main {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: auto;
     padding: 2rem;
   }
 
   /* Scoreboard */
   .scoreboard {
-    background: #004B8D;
+    background: linear-gradient(135deg, #004B8D, #002B5C);
     color: #fff;
-    border-radius: 10px;
-    padding: 2rem 3rem;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     text-align: center;
     margin-bottom: 2rem;
   }
 
-  .matchup { font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem; }
+  .matchup {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+
   .teams {
     display: flex;
     justify-content: space-between;
-    font-size: 1.2rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 0 1rem;
+  }
+
+  .team img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
     margin-bottom: 0.5rem;
   }
-  .scores {
-    display: flex;
-    justify-content: space-between;
-    font-size: 2.5rem;
+
+  .team-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+  }
+
+  .score {
+    font-size: 3rem;
     font-weight: bold;
   }
-  #status { margin-top: 1rem; font-size: 1rem; color: #ffdd57; }
+
+  .versus {
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex: 0;
+    margin: 0 1rem;
+  }
+
+  #status {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #ffdd57;
+  }
 
   /* Sections */
   section {
     background: #fff;
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
   }
 
@@ -70,9 +107,12 @@
 
   .halftime p, .predictions p { margin-bottom: 0.5rem; }
 
-  @media(max-width: 500px) {
-    .teams, .scores { flex-direction: column; gap: 0.5rem; }
-    .scores { font-size: 2rem; }
+  @media(max-width: 600px) {
+    .teams { flex-direction: column; gap: 1rem; }
+    .versus { display: none; }
+    .team img { width: 80px; height: 80px; }
+    .score { font-size: 2.2rem; }
+    .matchup { font-size: 1.5rem; }
   }
 </style>
 </head>
@@ -88,12 +128,17 @@
   <section class="scoreboard">
     <div class="matchup">Seattle Seahawks vs New England Patriots</div>
     <div class="teams">
-      <div id="team-home">Seattle Seahawks</div>
-      <div id="team-away">New England Patriots</div>
-    </div>
-    <div class="scores">
-      <div id="score-home">0</div>
-      <div id="score-away">0</div>
+      <div class="team" id="home-team">
+        <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg" alt="Seattle Seahawks Logo">
+        <div class="team-name" id="team-home">Seattle Seahawks</div>
+        <div class="score" id="score-home">0</div>
+      </div>
+      <div class="versus">VS</div>
+      <div class="team" id="away-team">
+        <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg" alt="New England Patriots Logo">
+        <div class="team-name" id="team-away">New England Patriots</div>
+        <div class="score" id="score-away">0</div>
+      </div>
     </div>
     <div id="status">Loading score...</div>
   </section>
@@ -122,19 +167,6 @@
     <h3>Halftime Show</h3>
     <p><strong>Performer:</strong> Bad Bunny</p>
     <p>Experience a high-energy performance from the global Latin superstar!</p>
-  </section>
-
-  <!-- Fun Facts -->
-  <section class="trivia">
-    <h3>Fun Facts</h3>
-    <ul>
-      <li>This game is a <strong>rematch of Super Bowl XLIX (2015)</strong>, where the Patriots defeated the Seahawks 28–24 with Malcolm Butler's interception.</li>
-      <li>The Seahawks and Patriots have faced each other <strong>21 times overall</strong> (regular season + playoffs), with Seattle slightly leading the series.</li>
-      <li>Super Bowl LX is the <strong>10th rematch in Super Bowl history</strong>, a rare occurrence in NFL history.</li>
-      <li>The New England Patriots hold the NFL record for the <strong>most Super Bowl appearances</strong> by any franchise.</li>
-      <li>Levi’s Stadium hosted <strong>Super Bowl 50 in 2016</strong> and now Super Bowl LX, making it one of the few stadiums to host multiple Super Bowls.</li>
-      <li>Bad Bunny is the <strong>first solo Spanish-speaking artist</strong> to headline the Super Bowl halftime show.</li>
-    </ul>
   </section>
 
 </main>
@@ -172,7 +204,7 @@ async function loadScore() {
 }
 
 loadScore();
-setInterval(loadScore, 3000);
+setInterval(loadScore, 30000);
 </script>
 
 </body>
