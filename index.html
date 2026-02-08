@@ -31,7 +31,6 @@
     padding: 1rem;
   }
 
-  /* Scoreboard */
   .scoreboard {
     background: #fff3e6;
     border-radius: 18px;
@@ -98,7 +97,6 @@
     100% { transform: scale(1); }
   }
 
-  /* Quarter / Clock / Possession */
   #game-meta {
     margin-top: 0.8rem;
     font-weight: 600;
@@ -114,7 +112,6 @@
     margin-left: 0.5rem;
   }
 
-  /* Status badge */
   .status-badge {
     display: inline-block;
     margin-top: 0.8rem;
@@ -128,7 +125,6 @@
   .status-live { background: #2ecc71; color: #fff; }
   .status-final { background: #34495e; color: #fff; }
 
-  /* Quarter-by-quarter table */
   .quarter-table {
     width: 100%;
     border-collapse: collapse;
@@ -146,7 +142,6 @@
     color: #fff;
   }
 
-  /* Last scoring play ticker */
   #last-play {
     background: #ffe5d6;
     padding: 0.5rem 1rem;
@@ -155,7 +150,6 @@
     font-weight: 600;
   }
 
-  /* Player stats panel */
   .stats-panel {
     margin-top: 1rem;
     padding: 1rem;
@@ -170,20 +164,10 @@
     font-size: 1.1rem;
   }
 
-  /* Mobile */
   @media (max-width: 600px) {
-    .teams {
-      flex-direction: column;
-    }
-
-    .team img {
-      width: 70px;
-      height: 70px;
-    }
-
-    .score {
-      font-size: 2.4rem;
-    }
+    .teams { flex-direction: column; }
+    .team img { width: 70px; height: 70px; }
+    .score { font-size: 2.4rem; }
   }
 </style>
 </head>
@@ -262,8 +246,8 @@
 </main>
 
 <script>
-const HOME_TEAM = "Seahawks";
-const AWAY_TEAM = "Patriots";
+const HOME_TEAM = "Seattle Seahawks";
+const AWAY_TEAM = "New England Patriots";
 const API = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
 
 const homeScoreEl = document.getElementById("score-home");
@@ -271,7 +255,6 @@ const awayScoreEl = document.getElementById("score-away");
 const quarterEl = document.getElementById("quarter");
 const clockEl = document.getElementById("clock");
 const statusEl = document.getElementById("status");
-
 const homePoss = document.getElementById("home-possession");
 const awayPoss = document.getElementById("away-possession");
 
@@ -302,9 +285,19 @@ async function loadGame() {
     const data = await res.json();
 
     const game = data.events.find(e =>
-      e.name.includes(HOME_TEAM) && e.name.includes(AWAY_TEAM)
+      e.competitions?.[0]?.competitors?.some(t => t.team.displayName === HOME_TEAM) &&
+      e.competitions?.[0]?.competitors?.some(t => t.team.displayName === AWAY_TEAM)
     );
-    if (!game) return;
+
+    if (!game) {
+      setStatus("upcoming", "CHECK BACK SOON");
+      quarterEl.textContent = "—";
+      clockEl.textContent = "—";
+      homeScoreEl.textContent = awayScoreEl.textContent = "—";
+      document.getElementById("last-play").textContent = "Last scoring play: —";
+      document.getElementById("team-stats").textContent = "Loading...";
+      return;
+    }
 
     const comp = game.competitions[0];
     const home = comp.competitors.find(t => t.homeAway === "home");
@@ -314,32 +307,42 @@ async function loadGame() {
     if (lastHome !== null && home.score !== lastHome) pulse(homeScoreEl);
     if (lastAway !== null && away.score !== lastAway) pulse(awayScoreEl);
 
-    homeScoreEl.textContent = home.score;
-    awayScoreEl.textContent = away.score;
+    homeScoreEl.textContent = home.score || "0";
+    awayScoreEl.textContent = away.score || "0";
     lastHome = home.score;
     lastAway = away.score;
 
     // Quarter / clock
     quarterEl.textContent = formatQuarter(comp.status);
-    clockEl.textContent = comp.status.displayClock || "—";
+
+    if (comp.status.type.state === "pre") {
+      const kickoffTime = new Date(comp.date).getTime();
+      const now = Date.now();
+      const diff = kickoffTime - now;
+      if (diff > 0) {
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+        clockEl.textContent = `${minutes}:${seconds.toString().padStart(2,"0")} until kickoff`;
+      } else {
+        clockEl.textContent = "Starting soon";
+      }
+    } else {
+      clockEl.textContent = comp.status.displayClock || "—";
+    }
 
     // Possession
     homePoss.style.display = home.hasPossession ? "inline-block" : "none";
     awayPoss.style.display = away.hasPossession ? "inline-block" : "none";
 
     // Status
-    if (comp.status.type.completed) {
-      setStatus("final", "FINAL");
-    } else if (comp.status.type.state === "pre") {
-      setStatus("upcoming", "UPCOMING");
-    } else {
-      setStatus("live", "LIVE");
-    }
+    if (comp.status.type.completed) setStatus("final", "FINAL");
+    else if (comp.status.type.state === "pre") setStatus("upcoming", "UPCOMING");
+    else setStatus("live", "LIVE");
 
-    // Quarter-by-quarter
+    // Quarter-by-quarter table
     ["1","2","3","4","OT"].forEach((q,i) => {
-      document.getElementById(`home-q${i+1}`).textContent = home.linescores[i]?.score || "—";
-      document.getElementById(`away-q${i+1}`).textContent = away.linescores[i]?.score || "—";
+      document.getElementById(`home-q${i+1}`).textContent = home.linescores?.[i]?.score || "—";
+      document.getElementById(`away-q${i+1}`).textContent = away.linescores?.[i]?.score || "—";
     });
 
     // Last scoring play
@@ -351,15 +354,14 @@ async function loadGame() {
       document.getElementById("last-play").textContent = "Last scoring play: —";
     }
 
-    // Team stats panel
+    // Team stats
     const statsDiv = document.getElementById("team-stats");
     statsDiv.innerHTML = `
       <p>${home.team.displayName}: ${home.statistics?.map(s=>`${s.name}: ${s.value}`).join(", ") || "N/A"}</p>
       <p>${away.team.displayName}: ${away.statistics?.map(s=>`${s.name}: ${s.value}`).join(", ") || "N/A"}</p>
     `;
 
-  } catch (err) {
-    console.warn("API unavailable", err);
+  } catch {
     setStatus("upcoming", "CHECK BACK SOON");
     quarterEl.textContent = "—";
     clockEl.textContent = "—";
