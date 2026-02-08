@@ -142,7 +142,7 @@ function formatQuarter(status){
   return `Q${status.period}`;
 }
 
-// Countdown that runs continuously until kickoff
+// Countdown that always runs until kickoff
 function fallbackCountdown(){
   const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
   const now = Date.now();
@@ -151,21 +151,22 @@ function fallbackCountdown(){
   const h = Math.floor(diff/3600000);
   const m = Math.floor((diff%3600000)/60000);
   const s = Math.floor((diff%60000)/1000);
+
+  // Always display countdown until kickoff
   if(diff>0){
     clockEl.textContent = `${h}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")} until kickoff`;
   } else {
     clockEl.textContent = "00:00:00 — Kickoff!";
   }
 
-  // Switch to LIVE 1 hour before kickoff
-  if(diff<=3600000) {
+  // LIVE 1 hour before kickoff
+  if(diff <= 3600000) {
     setStatus("live","LIVE");
     if(homeScoreEl.textContent==="—") homeScoreEl.textContent="0";
     if(awayScoreEl.textContent==="—") awayScoreEl.textContent="0";
     if(quarterEl.textContent==="—") quarterEl.textContent="Q1";
   } else {
     setStatus("upcoming","UPCOMING");
-    if(quarterEl.textContent==="—") quarterEl.textContent="—";
   }
 }
 
@@ -197,7 +198,7 @@ async function loadGame(){
     lastAway=away.score;
 
     quarterEl.textContent=formatQuarter(comp.status);
-    clockEl.textContent=comp.status.displayClock||"—";
+    clockEl.textContent=comp.status.displayClock||clockEl.textContent;
 
     homePoss.style.display=home.hasPossession?"inline-block":"none";
     awayPoss.style.display=away.hasPossession?"inline-block":"none";
