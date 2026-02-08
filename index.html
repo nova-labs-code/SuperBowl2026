@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/a/ac/NFL_logo.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Bowl LX 2026 – Seahawks vs Patriots</title>
+<style>
+  /* Global styles */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #f8f9fa; color: #1c1e21; line-height: 1.6; }
+  h1, h2, h3 { font-weight: 600; }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.5rem; color: #555; }
+  h3 { margin-bottom: 0.5rem; color: #333; }
+
+  /* Header */
+  header { background: #004B8D; color: #fff; text-align: center; padding: 3rem 1rem; }
+  header h1 { margin-bottom: 0.5rem; }
+  header h2 { font-weight: 400; }
+
+  /* Main grid container */
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 2rem; max-width: 1200px; margin: auto; }
+
+  /* Matchup */
+  .matchup { display: flex; justify-content: space-around; align-items: center; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+  .team { text-align: center; }
+  .team img { max-width: 120px; }
+  .versus { font-size: 1.8rem; font-weight: bold; color: #D50A0A; }
+
+  /* Info cards */
+  section { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+  #countdown { font-size: 2rem; font-weight: bold; color: #004B8D; margin-top: 1rem; }
+
+  ul { list-style: none; padding: 0; }
+  li { background: #f1f3f5; padding: 0.8rem 1rem; margin-bottom: 0.5rem; border-radius: 5px; }
+
+  .halftime p, .predictions p { margin-bottom: 0.5rem; }
+
+  /* Footer */
+  footer { text-align: center; padding: 2rem; font-size: 0.9rem; background: #e9ecef; color: #555; margin-top: 2rem; }
+
+  /* Responsive adjustments */
+  @media(max-width: 768px) {
+    .matchup { flex-direction: column; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Super Bowl LX – 2026</h1>
+</header>
+
+<main>
+
+  <!-- Matchup -->
+  <div class="matchup">
+    <div class="team">
+      <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg" alt="Seattle Seahawks Logo">
+      <p>Seattle Seahawks</p>
+    </div>
+    <div class="versus">VS</div>
+    <div class="team">
+      <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg" alt="New England Patriots Logo">
+      <p>New England Patriots</p>
+    </div>
+  </div>
+
+  <!-- Game Info -->
+  <section class="info">
+    <h3>Game Information</h3>
+    <p><strong>Date & Kickoff:</strong> Sunday, February 8, 2026 | 6:30 PM ET / 3:30 PM PT</p>
+    <p><strong>Location:</strong> Levi’s Stadium, Santa Clara, California</p>
+    <p><strong>TV & Streaming:</strong> NBC | Peacock | Telemundo | Universo</p>
+    <div id="countdown"></div>
+  </section>
+
+  <!-- Predictions -->
+  <section class="predictions">
+    <h3>Predictions</h3>
+    <ul>
+      <li>Seahawks win by 3 points</li>
+      <li>Patriots score over 24 points</li>
+      <li>First touchdown: Seahawks</li>
+      <li>Most Valuable Player (MVP): TBD</li>
+    </ul>
+  </section>
+
+  <!-- Halftime Show -->
+  <section class="halftime">
+    <h3>Halftime Show</h3>
+    <p><strong>Performer:</strong> Bad Bunny</p>
+    <p>Experience a high-energy performance from the global Latin superstar!</p>
+  </section>
+
+  <!-- Fun Facts -->
+  <section class="trivia">
+    <h3>Fun Facts</h3>
+    <ul>
+      <li>This game is a <strong>rematch of Super Bowl XLIX (2015)</strong>, where the Patriots defeated the Seahawks 28–24 with Malcolm Butler's interception.</li>
+      <li>The Seahawks and Patriots have faced each other <strong>21 times overall</strong> (regular season + playoffs), with Seattle slightly leading the series.</li>
+      <li>Super Bowl LX is the <strong>10th rematch in Super Bowl history</strong>, a rare occurrence in NFL history.</li>
+      <li>The New England Patriots hold the NFL record for the <strong>most Super Bowl appearances</strong> by any franchise.</li>
+      <li>Levi’s Stadium hosted <strong>Super Bowl 50 in 2016</strong> and now Super Bowl LX, making it one of the few stadiums to host multiple Super Bowls.</li>
+      <li>Bad Bunny is the <strong>first solo Spanish-speaking artist</strong> to headline the Super Bowl halftime show.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  &copy; 2026 NFL | Official Super Bowl LX Info
+</footer>
+
+<script>
+const kickoff = new Date("Feb 8, 2026 18:30:00").getTime();
+const countdownEl = document.getElementById("countdown");
+
+setInterval(() => {
+  const now = new Date().getTime();
+  const diff = kickoff - now;
+  if (diff <= 0) {
+    countdownEl.innerHTML = "Kickoff!";
+    return;
+  }
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}, 1000);
+</script>
+
+</body>
+</html>
