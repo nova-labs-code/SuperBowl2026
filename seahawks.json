@@ -1,0 +1,282 @@
+{
+  "team": "Seattle Seahawks",
+  "coaches": [
+    {
+      "name": "Mike Macdonald",
+      "role": "Head Coach",
+      "photo": "https://static.seahawks.com/images/head-coach-mike-macdonald-2025.jpg"
+    },
+    {
+      "name": "Klint Kubiak",
+      "role": "Offensive Coordinator",
+      "photo": "https://static.seahawks.com/images/klint-kubiak-2025.jpg"
+    },
+    {
+      "name": "Aden Durde",
+      "role": "Defensive Coordinator",
+      "photo": "https://static.seahawks.com/images/aden-durde-2025.jpg"
+    },
+    {
+      "name": "Jay Harbaugh",
+      "role": "Special Teams Coordinator",
+      "photo": "https://static.seahawks.com/images/jay-harbaugh-2025.jpg"
+    }
+  ],
+  "players": [
+    {
+      "name": "Sam Darnold",
+      "position": "QB",
+      "photo": "https://www.seahawks.com/photos/image/176"
+    },
+    {
+      "name": "Drew Lock",
+      "position": "QB",
+      "photo": "https://www.seahawks.com/photos/image/154"
+    },
+    {
+      "name": "Jalen Milroe",
+      "position": "QB",
+      "photo": "https://www.seahawks.com/photos/image/162"
+    },
+    {
+      "name": "Kenneth Walker III",
+      "position": "RB",
+      "photo": "https://www.seahawks.com/photos/image/168"
+    },
+    {
+      "name": "George Holani",
+      "position": "RB",
+      "photo": "https://www.seahawks.com/photos/image/193"
+    },
+    {
+      "name": "Zach Charbonnet",
+      "position": "RB",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Robbie Ouzts",
+      "position": "FB",
+      "photo": "https://www.seahawks.com/photos/image/199"
+    },
+    {
+      "name": "Brady Russell",
+      "position": "FB",
+      "photo": "https://www.seahawks.com/photos/image/195"
+    },
+    {
+      "name": "Jaxon Smith-Njigba",
+      "position": "WR",
+      "photo": "https://www.seahawks.com/photos/image/172"
+    },
+    {
+      "name": "Cooper Kupp",
+      "position": "WR",
+      "photo": "https://www.seahawks.com/photos/image/170"
+    },
+    {
+      "name": "Rashid Shaheed",
+      "position": "WR",
+      "photo": "https://www.seahawks.com/photos/image/186"
+    },
+    {
+      "name": "Jake Bobo",
+      "position": "WR",
+      "photo": "https://www.seahawks.com/photos/image/180"
+    },
+    {
+      "name": "Dareke Young",
+      "position": "WR",
+      "photo": "https://www.seahawks.com/photos/image/83"
+    },
+    {
+      "name": "Tory Horton",
+      "position": "WR",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Elijah Arroyo",
+      "position": "TE",
+      "photo": "https://www.seahawks.com/photos/image/178"
+    },
+    {
+      "name": "A.J. Barner",
+      "position": "TE",
+      "photo": "https://www.seahawks.com/photos/image/93"
+    },
+    {
+      "name": "Nick Kallerup",
+      "position": "TE",
+      "photo": "https://www.seahawks.com/photos/image/95"
+    },
+    {
+      "name": "Eric Saubert",
+      "position": "TE",
+      "photo": "https://www.seahawks.com/photos/image/89"
+    },
+    {
+      "name": "Charles Cross",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/75"
+    },
+    {
+      "name": "Abraham Lucas",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/77"
+    },
+    {
+      "name": "Anthony Bradford",
+      "position": "OL",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Bryce Cabeldue",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/87"
+    },
+    {
+      "name": "Grey Zabel",
+      "position": "OL",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Jalen Sundell",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/71"
+    },
+    {
+      "name": "Josh Jones",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/79"
+    },
+    {
+      "name": "Olu Oluwatimi",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/55"
+    },
+    {
+      "name": "Mason Richman",
+      "position": "OL",
+      "photo": "https://www.seahawks.com/photos/image/85"
+    },
+    {
+      "name": "DeMarcus Lawrence",
+      "position": "DL",
+      "photo": "https://www.seahawks.com/photos/image/15"
+    },
+    {
+      "name": "Mike Morris",
+      "position": "DL",
+      "photo": "https://www.seahawks.com/photos/image/69"
+    },
+    {
+      "name": "Byron Murphy II",
+      "position": "DL",
+      "photo": "https://www.seahawks.com/photos/image/65"
+    },
+    {
+      "name": "Jarran Reed",
+      "position": "DL",
+      "photo": "https://www.seahawks.com/photos/image/70"
+    },
+    {
+      "name": "Leonard Williams",
+      "position": "DL",
+      "photo": "https://www.seahawks.com/photos/image/72"
+    },
+    {
+      "name": "Derick Hall",
+      "position": "LB",
+      "photo": "https://www.seahawks.com/photos/image/73"
+    },
+    {
+      "name": "Ernest Jones IV",
+      "position": "LB",
+      "photo": "https://www.seahawks.com/photos/image/74"
+    },
+    {
+      "name": "Tyrice Knight",
+      "position": "LB",
+      "photo": "https://www.seahawks.com/photos/image/76"
+    },
+    {
+      "name": "Boye Mafe",
+      "position": "LB",
+      "photo": "https://www.seahawks.com/photos/image/74"
+    },
+    {
+      "name": "Uchenna Nwosu",
+      "position": "LB",
+      "photo": "https://www.seahawks.com/photos/image/77"
+    },
+    {
+      "name": "Drake Thomas",
+      "position": "LB",
+      "photo": "https://www.seahawks.com/photos/image/75"
+    },
+    {
+      "name": "Connor O'Toole",
+      "position": "LB",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Devon Witherspoon",
+      "position": "CB",
+      "photo": "https://www.seahawks.com/photos/image/35"
+    },
+    {
+      "name": "Riq Woolen",
+      "position": "CB",
+      "photo": "https://www.seahawks.com/photos/image/39"
+    },
+    {
+      "name": "Nehemiah Pritchett",
+      "position": "CB",
+      "photo": "https://www.seahawks.com/photos/image/40"
+    },
+    {
+      "name": "Josh Jobe",
+      "position": "CB",
+      "photo": "https://www.seahawks.com/photos/image/43"
+    },
+    {
+      "name": "Shaquill Griffin",
+      "position": "CB",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Coby Bryant",
+      "position": "S",
+      "photo": "https://www.seahawks.com/photos/image/17"
+    },
+    {
+      "name": "Nick Emmanwori",
+      "position": "S",
+      "photo": "https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg"
+    },
+    {
+      "name": "Julian Love",
+      "position": "S",
+      "photo": "https://www.seahawks.com/photos/image/33"
+    },
+    {
+      "name": "Ty Okada",
+      "position": "S",
+      "photo": "https://www.seahawks.com/photos/image/49"
+    },
+    {
+      "name": "Jason Myers",
+      "position": "K",
+      "photo": "https://www.seahawks.com/photos/image/5"
+    },
+    {
+      "name": "Michael Dickson",
+      "position": "P",
+      "photo": "https://www.seahawks.com/photos/image/9"
+    },
+    {
+      "name": "Chris Stoll",
+      "position": "LS",
+      "photo": "https://www.seahawks.com/photos/image/53"
+    }
+  ]
+}
