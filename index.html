@@ -4,39 +4,80 @@
 <meta charset="UTF-8">
 <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/a/ac/NFL_logo.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Super Bowl LX 2026 – Seahawks vs Patriots</title>
+<title>Super Bowl LX 2026 – Coaches & Score</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #f8f9fa; color: #1c1e21; line-height: 1.6; }
   h1, h2, h3 { font-weight: 600; }
   h1 { font-size: 2.5rem; }
-  h2 { font-size: 1.5rem; color: #555; }
   h3 { margin-bottom: 0.5rem; color: #333; }
 
-  header { background: #004B8D; color: #fff; text-align: center; padding: 3rem 1rem; }
-  header h1 { margin-bottom: 0.5rem; }
-
+  header { background: #004B8D; color: #fff; text-align: center; padding: 2rem 1rem; }
   main { max-width: 1200px; margin: auto; padding: 2rem; }
 
-  .matchup { display: flex; justify-content: space-around; align-items: center; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-  .team { text-align: center; }
-  .team img { max-width: 120px; }
-  .versus { font-size: 1.8rem; font-weight: bold; color: #D50A0A; }
-
   section { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-  #countdown { font-size: 2rem; font-weight: bold; color: #004B8D; margin-top: 1rem; }
 
-  .coaches, .players { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
-  .card { background: #f1f3f5; border-radius: 8px; padding: 1rem; text-align: center; width: 120px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-  .card img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-bottom: 0.5rem; }
+  /* Professional Scoreboard */
+  #scoreboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    background: #004B8D;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
 
-  #scoreboard p { font-size: 1.5rem; font-weight: bold; text-align: center; margin-top: 1rem; }
+  .team-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+  }
 
-  ul { list-style: none; padding: 0; }
-  li { background: #f1f3f5; padding: 0.8rem 1rem; margin-bottom: 0.5rem; border-radius: 5px; }
+  .team-score img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+  }
+
+  .team-name {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+  }
+
+  .score {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .versus {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  #score-text {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: #000;
+  }
+
+  /* Coaches */
+  .coaches { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; justify-content: center; }
+  .card { background: #f1f3f5; border-radius: 8px; padding: 1rem; text-align: center; width: 150px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .card img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: 0.5rem; }
 
   @media(max-width: 768px) {
-    .matchup { flex-direction: column; gap: 1rem; }
+    .coaches { flex-direction: column; align-items: center; }
+    #scoreboard-container { flex-direction: column; gap: 1rem; }
+    .versus { display: none; }
   }
 </style>
 </head>
@@ -48,46 +89,35 @@
 
 <main>
 
-  <!-- Matchup -->
-  <div class="matchup">
-    <div class="team" id="seahawks-team">
-      <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg" alt="Seattle Seahawks Logo">
-      <p>Seattle Seahawks</p>
-    </div>
-    <div class="versus">VS</div>
-    <div class="team" id="patriots-team">
-      <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg" alt="New England Patriots Logo">
-      <p>New England Patriots</p>
-    </div>
-  </div>
-
-  <!-- Countdown -->
-  <section class="info">
-    <h3>Game Information</h3>
-    <p><strong>Date & Kickoff:</strong> Sunday, February 8, 2026 | 6:30 PM ET / 3:30 PM PT</p>
-    <p><strong>Location:</strong> Levi’s Stadium, Santa Clara, California</p>
-    <p><strong>TV & Streaming:</strong> NBC | Peacock | Telemundo | Universo</p>
-    <div id="countdown"></div>
-  </section>
-
   <!-- Scoreboard -->
   <section id="scoreboard">
     <h3>Scoreboard</h3>
+    <div id="scoreboard-container">
+      <div class="team-score" id="home-score">
+        <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg" alt="Seattle Seahawks Logo">
+        <p class="team-name">Seattle Seahawks</p>
+        <p class="score">0</p>
+      </div>
+      <div class="versus">VS</div>
+      <div class="team-score" id="away-score">
+        <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg" alt="New England Patriots Logo">
+        <p class="team-name">New England Patriots</p>
+        <p class="score">0</p>
+      </div>
+    </div>
     <p id="score-text">Loading score...</p>
   </section>
 
-  <!-- Seahawks Roster -->
-  <section id="seahawks-roster">
-    <h3>Seattle Seahawks Roster</h3>
+  <!-- Seahawks Coaches -->
+  <section id="seahawks-coaches-section">
+    <h3>Seattle Seahawks Coaches</h3>
     <div class="coaches" id="seahawks-coaches"></div>
-    <div class="players" id="seahawks-players"></div>
   </section>
 
-  <!-- Patriots Roster -->
-  <section id="patriots-roster">
-    <h3>New England Patriots Roster</h3>
+  <!-- Patriots Coaches -->
+  <section id="patriots-coaches-section">
+    <h3>New England Patriots Coaches</h3>
     <div class="coaches" id="patriots-coaches"></div>
-    <div class="players" id="patriots-players"></div>
   </section>
 
   <!-- Predictions -->
@@ -115,72 +145,62 @@
 </footer>
 
 <script>
-  // Countdown timer
   const kickoff = new Date("Feb 8, 2026 18:30:00 ET").getTime();
-  const countdownEl = document.getElementById("countdown");
-  setInterval(() => {
-    const now = new Date().getTime();
-    const diff = kickoff - now;
-    if (diff <= 0) {
-      countdownEl.innerHTML = "Kickoff!";
-      return;
-    }
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  }, 1000);
 
-  // Create card for coach/player
-  function createCard(person, isCoach=false) {
+  // Coaches data with real images
+  const seahawksCoaches = [
+    { "name": "Mike Macdonald", "role": "Head Coach", "photo": "https://www.seahawks.com/photos/image/17043" },
+    { "name": "Klint Kubiak", "role": "Offensive Coordinator", "photo": "https://www.seahawks.com/photos/image/17044" },
+    { "name": "Aden Durde", "role": "Defensive Coordinator", "photo": "https://www.seahawks.com/photos/image/17045" },
+    { "name": "Jay Harbaugh", "role": "Special Teams Coordinator", "photo": "https://www.seahawks.com/photos/image/17046" }
+  ];
+
+  const patriotsCoaches = [
+    { "name": "Bill Belichick", "role": "Head Coach", "photo": "https://upload.wikimedia.org/wikipedia/commons/8/84/Bill_Belichick_2019.jpg" },
+    { "name": "Joe Judge", "role": "Offensive Coordinator", "photo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Joe_Judge_2020.jpg" },
+    { "name": "Steve Belichick", "role": "Defensive Coordinator", "photo": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Steve_Belichick.jpg" },
+    { "name": "Larry Izzo", "role": "Special Teams Coordinator", "photo": "https://upload.wikimedia.org/wikipedia/commons/9/91/Larry_Izzo.jpg" }
+  ];
+
+  function createCoachCard(coach) {
     const div = document.createElement('div');
     div.className = 'card';
     div.innerHTML = `
-      <img src="${person.photo}" alt="${person.name}">
-      <p><strong>${person.name}</strong></p>
-      <p>${isCoach ? person.role : person.position}</p>
+      <img src="${coach.photo}" alt="${coach.name}">
+      <p><strong>${coach.name}</strong></p>
+      <p>${coach.role}</p>
     `;
     return div;
   }
 
-  // Load roster JSON
-  async function loadTeamRoster(jsonPath, coachesContainerId, playersContainerId) {
-    try {
-      const res = await fetch(jsonPath);
-      const data = await res.json();
+  // Load coaches
+  const seahawksContainer = document.getElementById('seahawks-coaches');
+  seahawksCoaches.forEach(c => seahawksContainer.appendChild(createCoachCard(c)));
 
-      const coachesContainer = document.getElementById(coachesContainerId);
-      data.coaches.forEach(coach => {
-        coachesContainer.appendChild(createCard(coach, true));
-      });
+  const patriotsContainer = document.getElementById('patriots-coaches');
+  patriotsCoaches.forEach(c => patriotsContainer.appendChild(createCoachCard(c)));
 
-      const playersContainer = document.getElementById(playersContainerId);
-      data.players.forEach(player => {
-        playersContainer.appendChild(createCard(player));
-      });
-    } catch (err) {
-      console.error('Error loading roster:', err);
-    }
-  }
-
-  loadTeamRoster('seahawks.json', 'seahawks-coaches', 'seahawks-players');
-  loadTeamRoster('patriots.json', 'patriots-coaches', 'patriots-players');
-
-  // Load score JSON
+  // Load score dynamically
   const scoreText = document.getElementById("score-text");
+  const homeScoreEl = document.querySelector("#home-score .score");
+  const awayScoreEl = document.querySelector("#away-score .score");
 
   async function loadScore() {
     try {
       const now = new Date().getTime();
       if (now < kickoff) {
         scoreText.textContent = "Game has not started yet";
+        homeScoreEl.textContent = "0";
+        awayScoreEl.textContent = "0";
         return;
       }
 
       const res = await fetch('score.json');
       const data = await res.json();
-      scoreText.textContent = `${data.homeTeam} ${data.homeScore} - ${data.awayTeam} ${data.awayScore}`;
+
+      homeScoreEl.textContent = data.homeScore;
+      awayScoreEl.textContent = data.awayScore;
+      scoreText.textContent = `${data.homeTeam} vs ${data.awayTeam}`;
     } catch (err) {
       console.error('Error loading score:', err);
       scoreText.textContent = "Unable to load score";
@@ -188,7 +208,7 @@
   }
 
   loadScore();
-  setInterval(loadScore, 30000); // refresh every 30 seconds
+  setInterval(loadScore, 30000);
 </script>
 
 </body>
