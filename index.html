@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Super Bowl LX 2026 – Live Scoreboard</title>
-
 <style>
 body {
   margin:0;
@@ -169,7 +168,6 @@ main { max-width:900px; margin:auto; padding:1rem; }
 }
 </style>
 </head>
-
 <body>
 <header>
   <h1>Super Bowl LX – 2026</h1>
@@ -263,6 +261,8 @@ const awayScoreEl = document.getElementById("score-away");
 const homePoss = document.getElementById("home-possession");
 const awayPoss = document.getElementById("away-possession");
 
+const lastPlayEl = document.getElementById("last-play");
+
 let kickoff = new Date("2026-02-08T18:30:00-05:00").getTime();
 let kickoffSynced = false;
 let gameIsLive = false;
@@ -273,17 +273,12 @@ function setStatus(type,text){
 
 function updateCountdown(){
   if(gameIsLive) return;
-
   const diff = kickoff - Date.now();
-
   if(diff > 0){
     const h = Math.floor(diff/3600000);
     const m = Math.floor(diff%3600000/60000);
     const s = Math.floor(diff%60000/1000);
-
-    clockEl.textContent =
-      `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
-
+    clockEl.textContent = `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
     quarterEl.textContent = "—";
     setStatus("upcoming","UPCOMING");
   } else {
@@ -312,51 +307,69 @@ async function loadGame(){
     const home = comp.competitors.find(t=>t.homeAway==="home");
     const away = comp.competitors.find(t=>t.homeAway==="away");
 
+    // Update scores
     homeScoreEl.textContent = home.score;
     awayScoreEl.textContent = away.score;
 
+    // Possession dots
     homePoss.style.display = home.hasPossession ? "inline-block" : "none";
     awayPoss.style.display = away.hasPossession ? "inline-block" : "none";
-
     homePoss.classList.toggle("live", gameIsLive && home.hasPossession);
     awayPoss.classList.toggle("live", gameIsLive && away.hasPossession);
 
+    // Warmup indicator
     const minutesToKickoff = (kickoff - Date.now()) / 60000;
-    const isWarmup =
-      comp.status.type.state === "pre" &&
-      minutesToKickoff <= 120 &&
-      minutesToKickoff > 0 &&
-      !gameIsLive;
-
+    const isWarmup = comp.status.type.state === "pre" && minutesToKickoff <= 120 && minutesToKickoff > 0 && !gameIsLive;
     warmupEl.classList.toggle("hidden", !isWarmup);
 
+    // Live game
     if(comp.status.type.state === "in" && !gameIsLive){
       gameIsLive = true;
       warmupEl.classList.add("hidden");
       document.getElementById("quarter-table").style.display = "table";
-
-      clockEl.classList.add("clock-fade-out");
-      setTimeout(()=>{
-        clockEl.textContent = comp.status.displayClock || "—";
-        clockEl.classList.remove("clock-fade-out");
-      },400);
-
       setStatus("live","LIVE");
     }
 
-    if(gameIsLive && comp.status.displayClock){
-      clockEl.textContent = comp.status.displayClock;
+    if(gameIsLive){
+      // Clock & quarter
+      clockEl.textContent = comp.status.displayClock || "—";
       quarterEl.textContent = `Q${comp.status.period}`;
+
+      // Last scoring play
+      if(comp.plays && comp.plays.length){
+        const lastScore = comp.plays.slice().reverse().find(p=>p.scoringPlay);
+        if(lastScore) lastPlayEl.textContent = `Last scoring play: ${lastScore.text}`;
+      }
+
+      // Update quarter table
+      ["q1","q2","q3","q4","ot"].forEach(q=>{
+        homeScoreQuarter = home.statistics?.find(s=>s.name==="pointsByPeriod")?.[q] || "—";
+        awayScoreQuarter = away.statistics?.find(s=>s.name==="pointsByPeriod")?.[q] || "—";
+        if(document.getElementById(`home-${q}`)) document.getElementById(`home-${q}`).textContent = homeScoreQuarter;
+        if(document.getElementById(`away-${q}`)) document.getElementById(`away-${q}`).textContent = awayScoreQuarter;
+      });
     }
 
-  } catch {}
+    // Game final
+    if(comp.status.type.state === "post"){
+      gameIsLive = false;
+      setStatus("final","FINAL");
+      clockEl.textContent = "Final";
+      quarterEl.textContent = "";
+      homePoss.style.display = "none";
+      awayPoss.style.display = "none";
+    }
+
+  } catch(e){ console.error(e); }
 }
 
+// Initial load
 updateCountdown();
-setInterval(updateCountdown,1000);
 loadGame();
-setInterval(loadGame,15000);
-</script>
 
+// Update every 3 seconds
+setInterval(updateCountdown,1000);
+setInterval(loadGame,3000);
+</script>
 </body>
 </html>
