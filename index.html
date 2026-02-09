@@ -151,25 +151,27 @@ main { max-width:900px; margin:auto; padding:1rem; }
 <div class="matchup">Seattle Seahawks vs New England Patriots</div>
 
 <div class="teams">
+  <!-- Seahawks -->
   <div class="team">
     <img src="https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg">
     <div class="team-info">
       <div class="team-name">
         Seattle Seahawks
-        <span id="home-possession" class="possession-dot" style="display:none"></span>
+        <span id="poss-seahawks" class="possession-dot" style="display:none"></span>
       </div>
-      <div class="score" id="score-home">—</div>
+      <div class="score" id="score-seahawks">—</div>
     </div>
   </div>
 
+  <!-- Patriots -->
   <div class="team">
     <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg">
     <div class="team-info">
       <div class="team-name">
         New England Patriots
-        <span id="away-possession" class="possession-dot" style="display:none"></span>
+        <span id="poss-patriots" class="possession-dot" style="display:none"></span>
       </div>
-      <div class="score" id="score-away">—</div>
+      <div class="score" id="score-patriots">—</div>
     </div>
   </div>
 </div>
@@ -189,25 +191,27 @@ main { max-width:900px; margin:auto; padding:1rem; }
 
 <script>
 const API = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
-const HOME = "Seattle Seahawks";
-const AWAY = "New England Patriots";
 
-const homeScoreEl = document.getElementById("score-home");
-const awayScoreEl = document.getElementById("score-away");
+const TEAM_A = "Seattle Seahawks";
+const TEAM_B = "New England Patriots";
+
+const scoreA = document.getElementById("score-seahawks");
+const scoreB = document.getElementById("score-patriots");
+
+const possA = document.getElementById("poss-seahawks");
+const possB = document.getElementById("poss-patriots");
+
 const clockEl = document.getElementById("clock");
 const quarterEl = document.getElementById("quarter");
 const statusEl = document.getElementById("status");
 const warmupEl = document.getElementById("warmup-indicator");
 
-const homePoss = document.getElementById("home-possession");
-const awayPoss = document.getElementById("away-possession");
-
 let kickoff = new Date("2026-02-08T18:30:00-05:00").getTime();
 let kickoffSynced = false;
 let gameIsLive = false;
 
-let lastHomeScore = null;
-let lastAwayScore = null;
+let lastA = null;
+let lastB = null;
 
 function setStatus(type, text) {
   statusEl.innerHTML = `<span class="status-badge status-${type}">${text}</span>`;
@@ -218,30 +222,14 @@ function flash(el) {
   setTimeout(() => el.style.background = "", 250);
 }
 
-function updateCountdown() {
-  if (gameIsLive) return;
-
-  const diff = kickoff - Date.now();
-  if (diff > 0) {
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor(diff % 3600000 / 60000);
-    const s = Math.floor(diff % 60000 / 1000);
-    clockEl.textContent = `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
-    quarterEl.textContent = "—";
-    setStatus("upcoming","UPCOMING");
-  } else {
-    clockEl.textContent = "Kickoff imminent";
-  }
-}
-
 async function loadGame() {
   try {
     const res = await fetch(`${API}?_=${Date.now()}`, { cache: "no-store" });
     const data = await res.json();
 
     const game = data.events.find(e =>
-      e.competitions[0].competitors.some(t => t.team.displayName === HOME) &&
-      e.competitions[0].competitors.some(t => t.team.displayName === AWAY)
+      e.competitions[0].competitors.some(t => t.team.displayName === TEAM_A) &&
+      e.competitions[0].competitors.some(t => t.team.displayName === TEAM_B)
     );
 
     if (!game) return;
@@ -252,21 +240,24 @@ async function loadGame() {
     }
 
     const comp = game.competitions[0];
-    const home = comp.competitors.find(t => t.homeAway === "home");
-    const away = comp.competitors.find(t => t.homeAway === "away");
 
-    if (lastHomeScore !== null && lastHomeScore !== home.score) flash(homeScoreEl);
-    if (lastAwayScore !== null && lastAwayScore !== away.score) flash(awayScoreEl);
+    const teamA = comp.competitors.find(t => t.team.displayName === TEAM_A);
+    const teamB = comp.competitors.find(t => t.team.displayName === TEAM_B);
 
-    homeScoreEl.textContent = home.score;
-    awayScoreEl.textContent = away.score;
-    lastHomeScore = home.score;
-    lastAwayScore = away.score;
+    if (lastA !== null && lastA !== teamA.score) flash(scoreA);
+    if (lastB !== null && lastB !== teamB.score) flash(scoreB);
 
-    homePoss.style.display = home.hasPossession ? "inline-block" : "none";
-    awayPoss.style.display = away.hasPossession ? "inline-block" : "none";
-    homePoss.classList.toggle("live", gameIsLive && home.hasPossession);
-    awayPoss.classList.toggle("live", gameIsLive && away.hasPossession);
+    scoreA.textContent = teamA.score;
+    scoreB.textContent = teamB.score;
+
+    lastA = teamA.score;
+    lastB = teamB.score;
+
+    possA.style.display = teamA.hasPossession ? "inline-block" : "none";
+    possB.style.display = teamB.hasPossession ? "inline-block" : "none";
+
+    possA.classList.toggle("live", gameIsLive && teamA.hasPossession);
+    possB.classList.toggle("live", gameIsLive && teamB.hasPossession);
 
     if (comp.status.type.state === "in") {
       gameIsLive = true;
@@ -281,16 +272,29 @@ async function loadGame() {
       setStatus("final","FINAL");
       clockEl.textContent = "Final";
       quarterEl.textContent = "";
-      homePoss.style.display = "none";
-      awayPoss.style.display = "none";
+      possA.style.display = "none";
+      possB.style.display = "none";
     }
 
   } catch {}
 }
 
+function updateCountdown() {
+  if (gameIsLive) return;
+
+  const diff = kickoff - Date.now();
+  if (diff > 0) {
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor(diff % 3600000 / 60000);
+    const s = Math.floor(diff % 60000 / 1000);
+    clockEl.textContent = `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
+    quarterEl.textContent = "—";
+    setStatus("upcoming","UPCOMING");
+  }
+}
+
 updateCountdown();
 loadGame();
-
 setInterval(updateCountdown, 1000);
 setInterval(loadGame, 1000);
 </script>
