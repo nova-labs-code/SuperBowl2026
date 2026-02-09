@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Super Bowl LX 2026 – Live Scoreboard</title>
+
 <style>
 body {
   margin:0;
@@ -11,14 +12,18 @@ body {
   background:#fdf7f0;
   color:#1c1e21;
 }
+
 header {
   background:#ff8c42;
   color:#fff;
   text-align:center;
   padding:1.5rem 1rem;
 }
+
 header h1 { margin:0; font-size:2rem; }
+
 main { max-width:900px; margin:auto; padding:1rem; }
+
 .scoreboard {
   background:#fff3e6;
   border-radius:18px;
@@ -26,13 +31,19 @@ main { max-width:900px; margin:auto; padding:1rem; }
   box-shadow:0 10px 25px rgba(0,0,0,0.1);
   text-align:center;
 }
+
 .matchup {
   font-size:1.4rem;
   font-weight:700;
   color:#ff6f3c;
   margin-bottom:1rem;
 }
-.teams { display:flex; gap:1rem; }
+
+.teams {
+  display:flex;
+  gap:1rem;
+}
+
 .team {
   flex:1;
   background:#fff;
@@ -43,10 +54,32 @@ main { max-width:900px; margin:auto; padding:1rem; }
   align-items:center;
   justify-content:space-between;
 }
-.team img { width:90px; height:90px; object-fit:contain; }
-.team-info { flex:1; padding-left:0.8rem; text-align:left; }
-.team-name { font-weight:700; color:#ff6f3c; }
-.score { font-size:3rem; font-weight:800; min-width:50px; text-align:right; transition: background 0.3s ease; }
+
+.team img {
+  width:90px;
+  height:90px;
+  object-fit:contain;
+}
+
+.team-info {
+  flex:1;
+  padding-left:0.8rem;
+  text-align:left;
+}
+
+.team-name {
+  font-weight:700;
+  color:#ff6f3c;
+}
+
+.score {
+  font-size:3rem;
+  font-weight:800;
+  min-width:50px;
+  text-align:right;
+  transition:background 0.25s ease;
+}
+
 .possession-dot {
   display:inline-block;
   width:10px;
@@ -55,15 +88,24 @@ main { max-width:900px; margin:auto; padding:1rem; }
   border-radius:50%;
   margin-left:0.5rem;
 }
+
 .possession-dot.live {
   animation: possessionPulse 1.2s infinite;
 }
+
 @keyframes possessionPulse {
   0% { box-shadow:0 0 0 0 rgba(46,204,113,0.9); }
   70% { box-shadow:0 0 0 10px rgba(46,204,113,0); }
   100% { box-shadow:0 0 0 0 rgba(46,204,113,0); }
 }
-#game-meta { margin-top:0.8rem; font-weight:600; color:#ff8c42; font-size:1.2rem; }
+
+#game-meta {
+  margin-top:0.8rem;
+  font-weight:600;
+  color:#ff8c42;
+  font-size:1.2rem;
+}
+
 .status-badge {
   display:inline-block;
   margin-top:0.6rem;
@@ -72,20 +114,24 @@ main { max-width:900px; margin:auto; padding:1rem; }
   font-size:0.85rem;
   font-weight:700;
 }
+
 .status-upcoming { background:#ddd; color:#444; }
 .status-live { background:#2ecc71; color:#fff; }
 .status-final { background:#34495e; color:#fff; }
-.warmup { margin-top:0.35rem; font-size:0.8rem; font-weight:600; color:#ff8c42; opacity:0.85; transition:opacity 0.4s ease; }
-.warmup.hidden { opacity:0; pointer-events:none; }
-.fade { transition:opacity 0.6s ease; opacity:1; }
-.clock-fade-out { opacity:0; }
-#clock.warning { color:#e74c3c; }
-#quarter-table { display:none; }
-.quarter-table { width:100%; border-collapse:collapse; margin-top:1rem; }
-.quarter-table th,
-.quarter-table td { padding:0.4rem 0.6rem; text-align:center; border:1px solid #ffddd0; }
-.quarter-table th { background:#ff6f3c; color:#fff; }
-#last-play { background:#ffe5d6; padding:0.5rem 1rem; border-radius:12px; margin-top:1rem; font-weight:600; transition: background 0.3s ease; }
+
+.warmup {
+  margin-top:0.4rem;
+  font-size:0.8rem;
+  font-weight:600;
+  color:#ff8c42;
+  opacity:0.85;
+}
+
+.warmup.hidden {
+  opacity:0;
+  pointer-events:none;
+}
+
 @media (max-width:600px) {
   .teams { flex-direction:column; }
   .team img { width:70px; height:70px; }
@@ -93,6 +139,7 @@ main { max-width:900px; margin:auto; padding:1rem; }
 }
 </style>
 </head>
+
 <body>
 <header>
   <h1>Super Bowl LX – 2026</h1>
@@ -128,40 +175,14 @@ main { max-width:900px; margin:auto; padding:1rem; }
 </div>
 
 <div id="game-meta">
-  <span id="quarter">—</span> • <span id="clock" class="fade">Loading…</span>
+  <span id="quarter">—</span> • <span id="clock">Loading…</span>
 </div>
 
 <div id="status">
   <span class="status-badge status-upcoming">UPCOMING</span>
 </div>
 
-<div id="warmup-indicator" class="warmup hidden">Data warming up…</div>
-
-<table class="quarter-table" id="quarter-table">
-<thead>
-<tr><th>Team</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>OT</th></tr>
-</thead>
-<tbody>
-<tr>
-  <td>Seahawks</td>
-  <td id="home-q1">—</td>
-  <td id="home-q2">—</td>
-  <td id="home-q3">—</td>
-  <td id="home-q4">—</td>
-  <td id="home-ot">—</td>
-</tr>
-<tr>
-  <td>Patriots</td>
-  <td id="away-q1">—</td>
-  <td id="away-q2">—</td>
-  <td id="away-q3">—</td>
-  <td id="away-q4">—</td>
-  <td id="away-ot">—</td>
-</tr>
-</tbody>
-</table>
-
-<div id="last-play">Last scoring play: —</div>
+<div id="warmup-indicator" class="warmup hidden">Broadcast data warming up…</div>
 
 </section>
 </main>
@@ -171,18 +192,15 @@ const API = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboa
 const HOME = "Seattle Seahawks";
 const AWAY = "New England Patriots";
 
+const homeScoreEl = document.getElementById("score-home");
+const awayScoreEl = document.getElementById("score-away");
 const clockEl = document.getElementById("clock");
 const quarterEl = document.getElementById("quarter");
 const statusEl = document.getElementById("status");
 const warmupEl = document.getElementById("warmup-indicator");
 
-const homeScoreEl = document.getElementById("score-home");
-const awayScoreEl = document.getElementById("score-away");
-
 const homePoss = document.getElementById("home-possession");
 const awayPoss = document.getElementById("away-possession");
-
-const lastPlayEl = document.getElementById("last-play");
 
 let kickoff = new Date("2026-02-08T18:30:00-05:00").getTime();
 let kickoffSynced = false;
@@ -190,24 +208,24 @@ let gameIsLive = false;
 
 let lastHomeScore = null;
 let lastAwayScore = null;
-let lastScoringPlay = "";
 
-function setStatus(type,text){
+function setStatus(type, text) {
   statusEl.innerHTML = `<span class="status-badge status-${type}">${text}</span>`;
 }
 
-function flashElement(el){
+function flash(el) {
   el.style.background = "#d4f7d4";
-  setTimeout(()=>{ el.style.background = ""; },300);
+  setTimeout(() => el.style.background = "", 250);
 }
 
-function updateCountdown(){
-  if(gameIsLive) return;
+function updateCountdown() {
+  if (gameIsLive) return;
+
   const diff = kickoff - Date.now();
-  if(diff > 0){
-    const h = Math.floor(diff/3600000);
-    const m = Math.floor(diff%3600000/60000);
-    const s = Math.floor(diff%60000/1000);
+  if (diff > 0) {
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor(diff % 3600000 / 60000);
+    const s = Math.floor(diff % 60000 / 1000);
     clockEl.textContent = `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")} until kickoff`;
     quarterEl.textContent = "—";
     setStatus("upcoming","UPCOMING");
@@ -216,71 +234,49 @@ function updateCountdown(){
   }
 }
 
-async function loadGame(){
-  try{
-    // Force fresh fetch
+async function loadGame() {
+  try {
     const res = await fetch(`${API}?_=${Date.now()}`, { cache: "no-store" });
     const data = await res.json();
 
     const game = data.events.find(e =>
-      e.competitions[0].competitors.some(t=>t.team.displayName===HOME) &&
-      e.competitions[0].competitors.some(t=>t.team.displayName===AWAY)
+      e.competitions[0].competitors.some(t => t.team.displayName === HOME) &&
+      e.competitions[0].competitors.some(t => t.team.displayName === AWAY)
     );
 
-    if(!game) return;
+    if (!game) return;
 
-    if(!kickoffSynced){
+    if (!kickoffSynced) {
       kickoff = new Date(game.date).getTime();
       kickoffSynced = true;
     }
 
     const comp = game.competitions[0];
-    const home = comp.competitors.find(t=>t.homeAway==="home");
-    const away = comp.competitors.find(t=>t.homeAway==="away");
+    const home = comp.competitors.find(t => t.homeAway === "home");
+    const away = comp.competitors.find(t => t.homeAway === "away");
 
-    // Scores flash on change
-    if(lastHomeScore !== null && lastHomeScore !== home.score) flashElement(homeScoreEl);
-    if(lastAwayScore !== null && lastAwayScore !== away.score) flashElement(awayScoreEl);
+    if (lastHomeScore !== null && lastHomeScore !== home.score) flash(homeScoreEl);
+    if (lastAwayScore !== null && lastAwayScore !== away.score) flash(awayScoreEl);
+
     homeScoreEl.textContent = home.score;
     awayScoreEl.textContent = away.score;
     lastHomeScore = home.score;
     lastAwayScore = away.score;
 
-    // Possession
     homePoss.style.display = home.hasPossession ? "inline-block" : "none";
     awayPoss.style.display = away.hasPossession ? "inline-block" : "none";
     homePoss.classList.toggle("live", gameIsLive && home.hasPossession);
     awayPoss.classList.toggle("live", gameIsLive && away.hasPossession);
 
-    // Warmup
-    const minutesToKickoff = (kickoff - Date.now()) / 60000;
-    warmupEl.classList.toggle("hidden", !(comp.status.type.state === "pre" && minutesToKickoff <= 120 && minutesToKickoff > 0 && !gameIsLive));
-
-    // Live game
-    if(comp.status.type.state === "in" && !gameIsLive){
+    if (comp.status.type.state === "in") {
       gameIsLive = true;
-      warmupEl.classList.add("hidden");
-      document.getElementById("quarter-table").style.display = "table";
       setStatus("live","LIVE");
-    }
-
-    if(gameIsLive){
       clockEl.textContent = comp.status.displayClock || "—";
       quarterEl.textContent = `Q${comp.status.period}`;
-
-      // Last scoring play flash
-      if(comp.plays && comp.plays.length){
-        const lastScore = comp.plays.slice().reverse().find(p=>p.scoringPlay);
-        if(lastScore && lastScore.text !== lastScoringPlay){
-          lastScoringPlay = lastScore.text;
-          lastPlayEl.textContent = `Last scoring play: ${lastScoringPlay}`;
-          flashElement(lastPlayEl);
-        }
-      }
+      warmupEl.classList.add("hidden");
     }
 
-    // Final
-    if(comp.status.type.state === "post"){
+    if (comp.status.type.state === "post") {
       gameIsLive = false;
       setStatus("final","FINAL");
       clockEl.textContent = "Final";
@@ -289,16 +285,14 @@ async function loadGame(){
       awayPoss.style.display = "none";
     }
 
-  } catch(e){ console.error(e); }
+  } catch {}
 }
 
-// Initial load
 updateCountdown();
 loadGame();
 
-// Update every 1 second
-setInterval(updateCountdown,1000);
-setInterval(loadGame,1000);
+setInterval(updateCountdown, 1000);
+setInterval(loadGame, 1000);
 </script>
 </body>
 </html>
